@@ -10,8 +10,8 @@ const response = (res, status, result)=>{ // create response variable to condens
     res.status(status).json(result);
 }
 
-BlogRouter.get("/", async(req, res)=> {
-    await Blog.find()
+BlogRouter.get("/", getAuth, async(req, res)=> {
+    await Blog.find().populate("user", "-password").sort("-createdOn")
     .then(result=>{
         response(res, 200, result)
     })
@@ -37,9 +37,9 @@ BlogRouter.post("/publish", getAuth, async (req, res) => {
 })
 
 // create a router to delete a blog post 
-BlogRouter.delete("/delete", getAuth, async (req, res) => {
+BlogRouter.delete("/delete/:id", getAuth, async (req, res) => {
     try {
-        const blog = await Blog.findOneAndDelete({user: req.userId, _id: req.body.id})
+        const blog = await Blog.findOneAndDelete({user: req.userId, _id: req.params.id})
         if (!blog) {
             response(res, 404, {error: "Blog not found!"})
         }
@@ -50,9 +50,9 @@ BlogRouter.delete("/delete", getAuth, async (req, res) => {
 })
 
 // create a router to update a blog post 
-BlogRouter.put("/update", getAuth, async (req, res) => {
+BlogRouter.put("/update:id", getAuth, async (req, res) => {
     const {title, content, image, id} = req.body;
-    await Blog.findOneAndUpdate({user: req.userId, _id: id},
+    await Blog.findOneAndUpdate({user: req.userId, _id: req.params.id},
         { title, content, image
         })
     .then((result)=>response(res, 200, {msg: "Blog post has been updated!", blog: result}))

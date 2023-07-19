@@ -1,10 +1,10 @@
 import React from 'react'
-import PostCard from '../components/PostCard'
+import DisplayPost from '../components/DisplayPost'
 
 const Home = () => {
     return (
     <div>
-        <PostCard/>
+        <DisplayPost/>
     </div>
     )
 }

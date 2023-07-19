@@ -1,14 +1,19 @@
-import React from 'react'
+import React, { createContext, useState } from 'react'
 import {BrowserRouter, Routes, Route} from "react-router-dom"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Navbar from "./components/Navbar"
 import { Container } from '@mui/material'
+import CreatePost from './pages/CreatePost'
+
+export const AuthContext = createContext();
 
 const App = () => {
+    const [auth, setAuth] = useState(null);
+
     return (
-    <div>
+        <AuthContext.Provider value={{ auth, setAuth }}>
        <BrowserRouter>
        <Navbar/>
 
@@ -16,14 +21,16 @@ const App = () => {
 
        <Routes>
             <Route path='/' element={<Home/>}/>
+            <Route path='/create' element={<CreatePost/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/register' element={<Register/>}/>
+            {/* <Route path='/update/:id' element={<UpdatePost />} /> */}
        </Routes>
 
        </Container>
 
        </BrowserRouter> 
-    </div>
+       </AuthContext.Provider>
     )
 }
 
